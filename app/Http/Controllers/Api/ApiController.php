@@ -21,11 +21,19 @@ class ApiController extends Controller
         $datacreate->description = $request->description;
         $datacreate->price = $request->price;
         $datacreate->available = $request->available;
-        $datacreate->save();
-        return response()->json([
-            "status" => 1,
-            "message" => "productos-create succesfully"
-        ]);
+        if(Products::where("id_product", $request->id_product)->exists()){
+            return response()->json([
+                "status" => 1,
+                "message" => "el codigo del producto ya existe"
+            ]);
+        }else{
+            $datacreate->save();
+            return response()->json([
+                "status" => 1,
+                "message" => "productos-create succesfully"
+            ]);
+
+        }
     }
     /**
      * Funcion que me permite traer todos los datos de productos en el base de datos
