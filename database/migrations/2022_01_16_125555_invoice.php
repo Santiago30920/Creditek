@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Compras extends Migration
+class Invoice extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class Compras extends Migration
      */
     public function up()
     {
-        Schema::create('compras', function(Blueprint $table){
+        Schema::create('invoice', function(Blueprint $table){
             $table->id();
             $table->string('ids');
-            $table->string('cantidad');
-            $table->date('fechaCompra');
-            $table->string('correoElectronico');
-            $table->integer('numeroCelular');
-            $table->integer('valorTotal');
+            $table->string('amount');
+            $table->date('purchaseDate');
+            $table->string('email');
+            $table->integer('phoneNumber');
+            $table->integer('totalPrice');
         });
     }
 
@@ -31,6 +31,6 @@ class Compras extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('compras');
+        Schema::dropIfExists('invoice');
     }
 }

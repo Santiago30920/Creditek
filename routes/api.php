@@ -18,6 +18,8 @@ use App\Http\Controllers\Api\ApiController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::post("productos-create", [ApiController::class, "productosCreate"]);
-Route::post("productos-get", [ApiController::class, "productosGet"]);
-Route::post("compras-post", [ApiController::class, "comprasPOST"]);
+
+//Se rutea las funciones para poder ser llamadas en el postman
+Route::post("products-create", [ApiController::class, "ProductsCreate"]);
+Route::post("products-get", [ApiController::class, "ProductsGet"]);
+Route::post("invoice-post", [ApiController::class, "InvoicePOST"]);

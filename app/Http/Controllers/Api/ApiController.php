@@ -4,52 +4,71 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\producto;
-use App\Models\compras;
+use App\Models\Products;
+use App\Models\Invoice;
 
 class ApiController extends Controller
 {
-    //Función que me permite registrar un producto 
-    public function productosCreate(Request $request)
+    /**
+     * Funcion que me permite persistir un producto
+     * @param Request recibe un objeto json, mandado por postman
+     */
+    public function ProductsCreate(Request $request)
     {
-        $datacreate = new producto;
-        $datacreate->id_producto = $request->id_producto;
-        $datacreate->nombre = $request->nombre;
-        $datacreate->descripcion = $request->descripcion;
-        $datacreate->valor = $request->valor;
-        $datacreate->disponibles = $request->disponibles;
+        $datacreate = new Products();
+        $datacreate->id_product = $request->id_product;
+        $datacreate->name = $request->name;
+        $datacreate->description = $request->description;
+        $datacreate->price = $request->price;
+        $datacreate->available = $request->available;
         $datacreate->save();
         return response()->json([
             "status" => 1,
             "message" => "productos-create succesfully"
         ]);
     }
-    //Funcion que me retorna un lista de productos
-    public function productosGet()
+    /**
+     * Funcion que me permite traer todos los datos de productos en el base de datos
+     * en un objeto json
+     */
+    public function ProductsGet()
     {
-        $productoRespuesta = producto::get();
+        $productResponse = Products::get();
         return response()->json([
             "status" => 1,
             "message" => "productos-get succesfully",
-            "data" => $productoRespuesta
+            "data" => $productResponse
         ]);
     }
-    public function comprasPOST(Request $request)
+    /**
+     * Funcion que me crea una factura
+     * @param Request recibe un obejto json, mandado por postman
+     */
+    public function InvoicePOST(Request $request)
     {
-        $datacreate = new compras;
-        $idProducto = $request->ids;
-        $cantidadP = $request->cantidad;
-        $datacreate->fechaCompra = date("Y-m-d H:i:s");
-        $datacreate->correoElectronico = $request->correoElectronico;
-        $datacreate->numeroCelular = $request->numeroCelular;
-        $productoRespuesta = producto::get();
-        for ($i = 0; $i < count($productoRespuesta); $i++) {
-            if ($productoRespuesta[$i]->id_producto == $idProducto) {
-                $datacreate->ids = $idProducto;
-                $datacreate->cantidad = $cantidadP;
-                $datacreate->valorTotal = $cantidadP * $productoRespuesta[$i]->valor;
-                $cantidadRestante = $productoRespuesta[$i]->disponibles - $cantidadP;
-                producto::where("id_producto", $idProducto)->update(['disponibles' => $cantidadRestante]);
+        //Llamos el modelo de invoice, en data create
+        $datacreate = new Invoice();
+        $idProduct = $request->ids;
+        $amount = $request->amount;
+        //Parar crear una fecha actual se utiliza  date("Y-m-d H:i:s")
+        $datacreate->purchaseDate = date("Y-m-d H:i:s");
+        $datacreate->email = $request->email;
+        $datacreate->phoneNumber = $request->phoneNumber;
+        //Traemos toda la informacion de products
+        $productResponse = Products::get();
+        //Creamos un ciclo donde me recorra toda lista de productos
+        for ($i = 0; $i < count($productResponse); $i++) {
+            //Colocamos un if, donde miramos que el productos seleccionado coincida con un producto existente
+            if ($productResponse[$i]->id_product == $idProduct) {
+                $datacreate->ids = $idProduct;
+                $datacreate->amount = $amount;
+                //sacamos el valor total
+                $datacreate->totalPrice = $amount * $productResponse[$i]->price;
+                //obtenemos la cantidad restante
+                $reamingAmount = $productResponse[$i]->available - $amount;
+                //editamos la cantidad restante en la tabla de products
+                Products::where("id_product", $idProduct)->update(['available' => $reamingAmount]);
+                //finalizamos en mandar todos los datos
                 $datacreate->save();
                 return response()->json([
                     "status" => 1,
