@@ -68,21 +68,29 @@ class ApiController extends Controller
         for ($i = 0; $i < count($productResponse); $i++) {
             //Colocamos un if, donde miramos que el productos seleccionado coincida con un producto existente
             if ($productResponse[$i]->id_product == $idProduct) {
-                $datacreate->ids = $idProduct;
-                $datacreate->amount = $amount;
-                //sacamos el valor total
-                $datacreate->totalPrice = $amount * $productResponse[$i]->price;
-                //obtenemos la cantidad restante
-                $reamingAmount = $productResponse[$i]->available - $amount;
-                //editamos la cantidad restante en la tabla de products
-                Products::where("id_product", $idProduct)->update(['available' => $reamingAmount]);
-                //finalizamos en mandar todos los datos
-                $datacreate->save();
-                return response()->json([
-                    "status" => 1,
-                    "message" => "Se guardo la compra"
-                ]);
-                break;
+                if($productResponse[$i]->available > 0 && $productResponse[$i]->available >= $amount){
+                    $datacreate->ids = $idProduct;
+                    $datacreate->amount = $amount;
+                    //sacamos el valor total
+                    $datacreate->totalPrice = $amount * $productResponse[$i]->price;
+                    //obtenemos la cantidad restante
+                    $reamingAmount = $productResponse[$i]->available - $amount;
+                    //editamos la cantidad restante en la tabla de products
+                    Products::where("id_product", $idProduct)->update(['available' => $reamingAmount]);
+                    //finalizamos en mandar todos los datos
+                    $datacreate->save();
+                    return response()->json([
+                        "status" => 1,
+                        "message" => "Se guardo la compra"
+                    ]);
+                    break;
+                }else{
+                    return response()->json([
+                        "status" => 1,
+                        "message" => "No se puede comprar este producto, ya que no hay stock disponible"
+                    ]);
+                    break;
+                }
             }
         };
     }
