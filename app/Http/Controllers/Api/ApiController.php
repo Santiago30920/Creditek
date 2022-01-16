@@ -68,6 +68,7 @@ class ApiController extends Controller
         for ($i = 0; $i < count($productResponse); $i++) {
             //Colocamos un if, donde miramos que el productos seleccionado coincida con un producto existente
             if ($productResponse[$i]->id_product == $idProduct) {
+                //Condicion donde miramos que el stock este vacio, o que el usuario no pueda comprar mas de lo necesario
                 if($productResponse[$i]->available > 0 && $productResponse[$i]->available >= $amount){
                     $datacreate->ids = $idProduct;
                     $datacreate->amount = $amount;
