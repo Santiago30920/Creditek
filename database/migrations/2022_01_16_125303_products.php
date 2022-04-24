@@ -20,6 +20,7 @@ class Products extends Migration
             $table->string('description');
             $table->integer('price');
             $table->integer('available');
+            $table->boolean('status');
         });
     }
 

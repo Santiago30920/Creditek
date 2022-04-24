@@ -17,6 +17,7 @@ class Products extends Model
         'description',
         'price',
         'available',
+        'status',
     ];
     public $timestamps = false;
 }

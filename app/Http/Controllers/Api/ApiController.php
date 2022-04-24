@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Products;
 use App\Models\Invoice;
+use Exception;
 
 class ApiController extends Controller
 {
@@ -15,24 +16,34 @@ class ApiController extends Controller
      */
     public function ProductsCreate(Request $request)
     {
-        $datacreate = new Products();
-        $datacreate->id_product = $request->id_product;
-        $datacreate->name = $request->name;
-        $datacreate->description = $request->description;
-        $datacreate->price = $request->price;
-        $datacreate->available = $request->available;
-        if(Products::where("id_product", $request->id_product)->exists()){
+        try{
+            $datacreate = new Products();
+            $datacreate->id_product = $request->id_product;
+            $datacreate->name = $request->name;
+            $datacreate->description = $request->description;
+            $datacreate->price = $request->price;
+            $datacreate->available = $request->available;
+            $datacreate->status = $request->status;
+            if(Products::where("id_product", $request->id_product)->exists()){
+                return response()->json([
+                    "status" => 200,
+                    "message" => "el codigo del producto ya existe"
+                ],200);
+            }else{
+                $datacreate->save();
+                return response()->json([
+                    "status" => 200,
+                    "message" => "productos-create succesfully"
+                ],200);
+    
+            }
+        }catch(Exception $e){
             return response()->json([
-                "status" => 1,
-                "message" => "el codigo del producto ya existe"
-            ]);
-        }else{
-            $datacreate->save();
-            return response()->json([
-                "status" => 1,
-                "message" => "productos-create succesfully"
-            ]);
-
+                "status" => 500,
+                "message" => "Ha ocurrido un error",
+                "messageLog" => $e->message,
+                "code"=> $e->code
+            ],500);
         }
     }
     /**
@@ -86,6 +97,7 @@ class ApiController extends Controller
                     ]);
                     break;
                 }else{
+                    roducts::where("id_product", $idProduct)->update(['status' => false]);
                     return response()->json([
                         "status" => 1,
                         "message" => "No se puede comprar este producto, ya que no hay stock disponible"

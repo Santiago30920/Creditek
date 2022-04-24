@@ -21,5 +21,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 //Se rutea las funciones para poder ser llamadas en el postman
 Route::post("products-create", [ApiController::class, "ProductsCreate"]);
-Route::post("products-get", [ApiController::class, "ProductsGet"]);
+Route::get("products-get", [ApiController::class, "ProductsGet"]);
 Route::post("invoice-post", [ApiController::class, "InvoicePOST"]);
