@@ -22,16 +22,19 @@ class user extends Controller
             $datacreate->name = $request->name;
             $datacreate->last_name = $request->last_name;
             $datacreate->email = $request->email;
-            $datacreate->password = Hash::make(Str::random(6));;
+            $password = Str::random(6);
+            $datacreate->password = hash('sha256',$password);
             $datacreate->rol = $request->rol;
             $datacreate->tidentifi = $request->tidentifi;
             $datacreate->nidentifi = $request->nidentifi;
             $datacreate->state = $request->state;
+            //dd($datacreate->password, $password);
             if(Users::where("nidentifi", $request->nidentifi)->exists()){
                 return response()->json([
                     "status" => 200,
                     "message" => "Este usuario ya se ecnuentra registrado",
-                    "code" => 0
+                    "code" => 0,
+                    "verifi" => $password
                 ],200);
             }else{
                 $datacreate->save();
@@ -54,7 +57,7 @@ class user extends Controller
      * Funcion que me permite traer todos los datos de productos en el base de datos
      * en un objeto json
      */
-    public function UsersGet()
+    public function UserGet()
     {
         $userResponse = Users::get();
         return response()->json([

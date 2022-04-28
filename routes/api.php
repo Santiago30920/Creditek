@@ -16,10 +16,6 @@ use App\Http\Controllers\Api\user;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
-
 //Se rutea las funciones para poder ser llamadas en el postman
 //funcion para llamar al controlador de productos
 Route::post("products-create", [product::class, "ProductsCreate"]);
@@ -29,5 +25,5 @@ Route::post("products-update", [product::class, "productUpdate"]);
 Route::post("invoice-post", [user::class, "InvoicePOST"]);
 //Rutas para llamar usuarios
 Route::post("user-create", [user::class, "UserCreate"]);
-Route::get("user-get", [user::class, "UsersGet"]);
+Route::get("user-get", [user::class, "UserGet"]);
 Route::post("user-update", [user::class, "productUpdate"]);
