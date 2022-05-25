@@ -23,6 +23,7 @@ class product extends Controller
             $datacreate->id_product = $request->id_product;
             $datacreate->name = $request->name;
             $datacreate->description = $request->description;
+            $datacreate->urlImage = $request->urlImage;
             $datacreate->price = $request->price;
             $datacreate->available = $request->available;
             $datacreate->status = $request->status;
@@ -70,6 +71,7 @@ class product extends Controller
             $response = Products::where('id_product', '=', $request->id_product)->update([
                 'name' => $request->name,
                 'description' => $request->description, 
+                'urlImage' => $request->urlImage, 
                 'price' => $request->price,
                 'available' => $request->available,
                 'status' => $request->status
