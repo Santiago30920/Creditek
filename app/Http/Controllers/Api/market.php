@@ -18,7 +18,7 @@ class market extends Controller
     {
         //Llamos el modelo de invoice, en data create
         $datacreate = new Invoice();
-        $idProduct = $request->ids;
+        $idProduct = $request->id_product;
         $amount = $request->amount;
         //Parar crear una fecha actual se utiliza  date("Y-m-d H:i:s")
         $datacreate->purchaseDate = date("Y-m-d H:i:s");
@@ -32,7 +32,7 @@ class market extends Controller
             if ($productResponse[$i]->id_product == $idProduct) {
                 //Condicion donde miramos que el stock este vacio, o que el usuario no pueda comprar mas de lo necesario
                 if($productResponse[$i]->available > 0 && $productResponse[$i]->available >= $amount){
-                    $datacreate->ids = $idProduct;
+                    $datacreate->id_product = $idProduct;
                     $datacreate->amount = $amount;
                     //sacamos el valor total
                     $datacreate->totalPrice = $amount * $productResponse[$i]->price;
@@ -43,14 +43,14 @@ class market extends Controller
                     //finalizamos en mandar todos los datos
                     $datacreate->save();
                     return response()->json([
-                        "status" => 1,
-                        "message" => "Se guardo la compra"
+                        "status" => 200,
+                        "message" => "Su compra fue exitosas"
                     ]);
                     break;
                 }else{
                     roducts::where("id_product", $idProduct)->update(['status' => false]);
                     return response()->json([
-                        "status" => 1,
+                        "status" => 200,
                         "message" => "No se puede comprar este producto, ya que no hay stock disponible"
                     ]);
                     break;

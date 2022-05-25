@@ -15,7 +15,7 @@ class Invoice extends Migration
     {
         Schema::create('invoice', function(Blueprint $table){
             $table->id();
-            $table->string('ids');
+            $table->string('id_product');
             $table->string('amount');
             $table->date('purchaseDate');
             $table->string('email');

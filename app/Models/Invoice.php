@@ -12,7 +12,7 @@ class Invoice extends Model
     protected $table = "invoice";
     //Modelo nos sirver para llamar todas las variables que se encuentran en la vase de datos
     protected $fillable = [
-        'ids',
+        'id_product',
         'amount',
         'purchaseDate',
         'email',

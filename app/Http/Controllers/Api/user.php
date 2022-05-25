@@ -71,10 +71,10 @@ class user extends Controller
      */
     public function productUpdate(Request $request){
         try{
-            $response = Users::where('id_product', '=', $request->id_product)->update([
-                'rol' => $request->rol,
+            $response = Users::where('nidentifi', '=', $request->nidentifi)->update([
+                'name' => $request->name,
+                'last_name' => $request->last_name,
                 'tidentifi' => $request->tidentifi,
-                'nidentifi' => $request->nidentifi,
                 'state' => $request->state,
             ]);
             if($response === 1){
