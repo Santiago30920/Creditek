@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use App\Models\Users;
 use Exception;
+use Illuminate\Support\Facades\Mail;
+use App\Http\Services\email;
 
 class user extends Controller
 {
@@ -28,23 +30,31 @@ class user extends Controller
             $datacreate->tidentifi = $request->tidentifi;
             $datacreate->nidentifi = $request->nidentifi;
             $datacreate->state = $request->state;
-            //dd($datacreate->password, $password);
-            if(Users::where("nidentifi", $request->nidentifi)->exists()){
-                return response()->json([
-                    "status" => 200,
-                    "message" => "Este usuario ya se ecnuentra registrado",
-                    "code" => 0,
-                    "verifi" => $password
-                ],200);
-            }else{
-                $datacreate->save();
-                return response()->json([
-                    "status" => 200,
-                    "message" => "El usuario fue creado correctamente",
-                    "code" => 1
-                ],200);
-    
-            }
+            $email = New email();
+                //dd($datacreate->password, $password);
+                if(Users::where("nidentifi", $request->nidentifi)->exists()){
+                    return response()->json([
+                        "status" => 200,
+                        "message" => "Este usuario ya se ecnuentra registrado",
+                        "code" => 0,
+                    ],200);
+                }else{
+                    $response = $email->email($datacreate->email,$password);
+                    if($response){
+                        $datacreate->save();
+                        return response()->json([
+                            "status" => 200,
+                            "message" => "El usuario fue creado correctamente",
+                            "code" => 1
+                        ],200);
+                    }else{
+                        return response()->json([
+                            "status" => 200,
+                            "message" => "El usuario no pudo ser creado intente nueva mente",
+                            "code" => 0,
+                        ],200);
+                    }
+                }
         }catch(Exception $e){
             return response()->json([
                 "status" => 500,

@@ -64,6 +64,26 @@ class product extends Controller
         ],200);
     }
     /**
+     * Funcion que me permite traer todos los datos de productos en el base de datos que se encuentren activos
+     * en un objeto json
+     */
+    public function ProductsGetTrue()
+    {
+        $productResponse = Products::get();
+        if($productResponse){
+            return response()->json([
+                "status" => 200,
+                "message" => "productos-get succesfully",
+                "data" => $productResponse
+            ],200);
+        }else{
+            return response()->json([
+                "status" => 200,
+                "message" => "No existe ningun dado",
+            ],200);
+        }
+    }
+    /**
      * Function for edit the product
      */
     public function productUpdate(Request $request){
